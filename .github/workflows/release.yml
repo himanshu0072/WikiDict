@@ -104,9 +104,16 @@ jobs:
         run: |
           ruff check . \
           --exclude __pycache__,.venv,venv,tests \
-          --format json \
-          --output ruff-report.json \
+          --output-format json \
+          > ruff-report.json \
           || true
+
+      - name: "Upload Ruff Report"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruff-report
+          path: ruff-report.json
+          retention-days: 2
 
   safety-scan:
     runs-on: ubuntu-latest
@@ -131,8 +138,7 @@ jobs:
         run: |
           safety check \
             --file requirements.txt \
-            --json \
-            --output safety-report.json || true
+            --output json > safety-report.json || true
 
       - name: "Upload Safety Report"
         uses: actions/upload-artifact@v4
@@ -167,12 +173,14 @@ jobs:
           black --check . || true
 
           # Run Flake8 linting
+          flake8 main.py --max-line-length=120 || true
           flake8 scripts/ --max-line-length=120 || true
           flake8 src/ --max-line-length=120 || true
 
           # Run type checking with mypy
-          mypy scripts/  || true
-          mypy src/  || true
+          mypy main.py || true
+          mypy scripts/ || true
+          mypy src/ || true
 
   build-container-image:
     name: Build Container Image
