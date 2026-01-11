@@ -7,7 +7,17 @@ __pycache__/
 .idea/
 *.log
 .claude/
+
 # Terraform
 .terraform/
+*.tfstate
 *.tfstate.*
-.terraform.lock.hcl
+terraform.tfvars
+secrets.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Commit .terraform.lock.hcl - it ensures consistent provider versions across team and CI/CD
