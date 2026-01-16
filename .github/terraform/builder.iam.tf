@@ -32,8 +32,6 @@ data "aws_iam_policy_document" "github_actions_ecr" {
       "ecr-public:DescribeRepositories",
       "ecr-public:DescribeImages",
       "ecr-public:DescribeImageTags",
-      "ecr-public:GetDownloadUrlForLayer",
-      "ecr-public:BatchGetImage",
       "ecr-public:InitiateLayerUpload",
       "ecr-public:UploadLayerPart",
       "ecr-public:CompleteLayerUpload",
