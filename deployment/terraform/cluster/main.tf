@@ -45,11 +45,11 @@ terraform {
   # │ Enables team collaboration and state locking                            │
   # └─────────────────────────────────────────────────────────────────────────┘
   # backend "s3" {
-  #   bucket         = "sm-wikidict-terraform-state"
-  #   key            = "cluster/terraform.tfstate"
+  #   bucket         = "sm-terraform-state-370260028560"
+  #   key            = "wikidict-service/cluster/terraform.tfstate"
   #   region         = "eu-north-1"
   #   encrypt        = true
-  #   dynamodb_table = "sm-wikidict-terraform-locks"
+  #   dynamodb_table = "terraform-state-locks"
   # }
 }
 

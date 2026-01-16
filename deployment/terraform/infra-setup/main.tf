@@ -28,17 +28,17 @@ provider "aws" {
   region = var.aws_region
 }
 
-# S3 Bucket for Terraform State
+# S3 Bucket for Terraform State (Shared across all projects)
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.service_name}-terraform-state"
+  bucket = "sm-terraform-state-370260028560"  # Must be globally unique
 
   lifecycle {
     prevent_destroy = true
   }
 
   tags = {
-    Name      = "${var.service_name}-terraform-state"
-    Project   = var.service_name
+    Name      = "sm-terraform-state-370260028560"
+    Purpose   = "Terraform state storage for all projects"
     ManagedBy = "terraform"
   }
 }
@@ -72,9 +72,9 @@ resource "aws_s3_bucket_public_access_block" "terraform_state" {
   restrict_public_buckets = true
 }
 
-# DynamoDB table for state locking
+# DynamoDB table for state locking (Shared across all projects)
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "${var.service_name}-terraform-locks"
+  name         = "terraform-state-locks"  # Generic table name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -84,8 +84,8 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 
   tags = {
-    Name      = "${var.service_name}-terraform-locks"
-    Project   = var.service_name
+    Name      = "terraform-state-locks"
+    Purpose   = "Terraform state locking for all projects"
     ManagedBy = "terraform"
   }
 }
@@ -106,10 +106,16 @@ output "backend_config" {
   value       = <<-EOT
     backend "s3" {
       bucket         = "${aws_s3_bucket.terraform_state.id}"
-      key            = "<environment>/terraform.tfstate"
+      key            = "<project-name>/<component>/terraform.tfstate"
       region         = "${var.aws_region}"
       encrypt        = true
       dynamodb_table = "${aws_dynamodb_table.terraform_locks.name}"
     }
+
+    Example for WikiDict ECR:
+      key = "wikidict-service/ecr/terraform.tfstate"
+
+    Example for WikiDict Cluster:
+      key = "wikidict-service/cluster/terraform.tfstate"
   EOT
 }
