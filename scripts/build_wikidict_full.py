@@ -543,7 +543,7 @@ def create_and_upload_manifest(s3_data_path, s3_index_path):
     logger.info("Creating manifest.json...")
 
     manifest = {
-        "service_name": "sm-wikidict",
+        "service_name": "wikidict",
         "service_description": "A dictionary service powered by Wiktionary.",
         "service_author": "Saurabh Maurya",
         "file_path": s3_data_path,
