@@ -79,7 +79,6 @@ async def search(
 # get /autocomplete
 @router.get(
         "/autocomplete", 
-        tags=["search"],
         response_model=SuccessResponse[list[AutocompleteItem]],
         responses={
             200: {"description": "Autocomplete suggestions returned successfully"},

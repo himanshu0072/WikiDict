@@ -87,7 +87,7 @@ class IndexLoader:
 
 
 # Lazy initialization - don't create instance at module load
-_index_loader: IndexLoader | None = None
+_index_loader: Optional[IndexLoader] = None
 
 
 def get_index_loader() -> IndexLoader:
