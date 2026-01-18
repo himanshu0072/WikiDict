@@ -6,7 +6,7 @@ Handles all exceptions and converts them to standard ErrorResponse format.
 
 import traceback
 from datetime import datetime, timezone
-from typing import Union
+from typing import Union, Optional
 from fastapi import Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -25,9 +25,12 @@ def create_error_response(
     title: str,
     detail: str,
     error_type: str,
-    errors: list[ErrorDetail] | None = None
+    errors: Optional[list[ErrorDetail]] = None
 ) -> ErrorResponse:
     """Create a standardized error response."""
+    # Get request ID from request state (set by middleware) or headers
+    request_id = getattr(request.state, "request_id", None) or request.headers.get("X-Request-ID")
+
     return ErrorResponse(
         type=generate_error_type_url(error_type),
         title=title,
@@ -35,7 +38,7 @@ def create_error_response(
         detail=detail,
         instance=str(request.url.path),
         errors=errors,
-        request_id=request.headers.get("X-Request-ID"),
+        request_id=request_id,
         timestamp=datetime.now(timezone.utc).isoformat()
     )
 

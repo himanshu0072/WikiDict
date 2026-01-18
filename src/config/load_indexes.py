@@ -5,6 +5,7 @@ This module is responsible for loading and managing indexes used in the applicat
 
 
 '''
+from typing import Optional
 from src.config import  env_settings
 from src.utils import read_json_from_s3, load_index_from_local
 
@@ -52,7 +53,7 @@ class IndexLoader:
             print(f"Error loading index from S3: {e}")
             raise e
 
-    def get_value_by_key(self, key: str) -> dict | None:
+    def get_value_by_key(self, key: str) -> Optional[dict]:
         return self.indexes.get(key, None)
     
     def autosuggest_keys(self, query: str, max_suggestions: int = 10, case_sensitive: bool = False) -> list[str]:

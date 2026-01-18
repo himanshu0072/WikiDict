@@ -9,7 +9,7 @@ from src.errors import (
     ServiceUnavailableException
 )
 
-def get_s3_client():
+def get_s3_client(read_timeout:int = 30):
     """Create and return an S3 client with credentials from environment settings."""
     from botocore.config import Config
 
@@ -17,7 +17,7 @@ def get_s3_client():
     config = Config(
         retries={'max_attempts': 3, 'mode': 'adaptive'},
         connect_timeout=5,
-        read_timeout=30,
+        read_timeout=read_timeout,
         max_pool_connections=50
     )
 
@@ -30,7 +30,7 @@ def get_s3_client():
     )
 def read_json_from_s3(bucket_name: str, file_name: str):
     """Read a JSON file from S3 and return its content."""
-    s3_client = get_s3_client()
+    s3_client = get_s3_client(120)
     response = s3_client.get_object(
         Bucket=bucket_name,
         Key=file_name

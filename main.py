@@ -3,6 +3,7 @@ SM-WikiDict FastAPI Server
 """
 
 import time
+import uuid
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -46,6 +47,35 @@ app.router.prefix = app_settings.api_prefix
 
 # Add gzip compression for responses larger than 0.5KB
 app.add_middleware(GZipMiddleware, minimum_size=500)
+
+# Add request ID middleware for tracking and debugging
+@app.middleware("http")
+async def add_request_id(request: Request, call_next):
+    """
+    Add unique request ID to each request for tracking and correlation.
+
+    - Checks for existing X-Request-ID header from client
+    - Generates UUID if not provided
+    - Adds to both request state and response headers
+    - Used in error responses for debugging
+    """
+    # Check if client provided a request ID
+    request_id = request.headers.get("X-Request-ID")
+
+    # Generate new UUID if not provided
+    if not request_id:
+        request_id = f"req_{uuid.uuid4().hex[:16]}"
+
+    # Store in request state for access in route handlers
+    request.state.request_id = request_id
+
+    # Process request
+    response = await call_next(request)
+
+    # Add request ID to response headers
+    response.headers["X-Request-ID"] = request_id
+
+    return response
 
 # Add timing middleware for performance monitoring
 @app.middleware("http")

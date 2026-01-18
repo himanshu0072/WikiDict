@@ -4,14 +4,14 @@ Standard Error Response Models and Exception Handlers
 Following RFC 7807 (Problem Details for HTTP APIs) and OpenAPI standards.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 from fastapi import status
 from pydantic import BaseModel, Field
 
 
 class ErrorDetail(BaseModel):
     """Individual error detail for validation errors."""
-    loc: list[str | int] = Field(..., description="Location of the error (field path)")
+    loc: list[Union[str, int]] = Field(..., description="Location of the error (field path)")
     msg: str = Field(..., description="Error message")
     type: str = Field(..., description="Error type")
 
