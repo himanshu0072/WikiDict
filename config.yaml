@@ -1,0 +1,22 @@
+service_name: wikidict
+description: Word Dictionary Service
+version: 1.0.0
+environment: development
+host: localhost
+port: 8000
+debug: true
+cors_origins: ["*"]
+api_prefix: /api/v1
+base_url: "http://localhost:8000"
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/app.log
+  max_size: 104857600  # 100 MB
+  backup_count: 5
+autosuggest:
+  enabled: true
+  max_suggestions: 10
+cache:
+  enabled: true
+  max_size: 10000  # LRU cache size: 10,000 entries (~80 MB for 1M requests/month)

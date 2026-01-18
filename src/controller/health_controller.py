@@ -3,15 +3,9 @@ Health Controller - Health check endpoints
 """
 
 from fastapi import APIRouter
-from pydantic import BaseModel
+from src.models import HealthResponse
 
 router = APIRouter(prefix="", tags=["Health"])
-
-
-class HealthResponse(BaseModel):
-    status: str
-    service: str
-    version: str
 
 
 @router.get("/health", response_model=HealthResponse)
@@ -45,11 +39,12 @@ async def readiness_check():
     Returns:
         HealthResponse: Service readiness status
     """
-    # TODO: Add actual dependency checks here
-    # Example:
-    # - Check database connection
-    # - Check Redis connection
-    # - Check external API availability
+
+    # check connection with S3
+
+    # check index status
+    
+
 
     return HealthResponse(
         status="ready",
